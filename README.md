@@ -1,6 +1,6 @@
 # docker-compose-arshive
 
-## How it works?
+## How to use
 
 - Or rename the file to `docker-compos.yml` and run the following command:
 ```bash
