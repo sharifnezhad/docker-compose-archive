@@ -1,36 +1,48 @@
 version: '3.8'
 services:
-    webapp:
-        restart: always
-        image: php:8.1.2-apache
-        command: 'php ./artisan serve --host=0.0.0.0'
-        volumes:
-            - .:/var/www/html/
-        ports:
-            - 8000:8000
-        depends_on:
-            - db
-        container_name: 'first-project'
-        networks:
-            - myNetwork
+  webapp:
+    container_name: 'laravel-project'
+    image: php:8.1.2-apache
+    restart: always
+    command: 'php ./artisan serve --host=0.0.0.0'
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - myNetwork
 
-    db:
-        platform: linux/x86_64
-        image: mysql:8.0
-        restart: always
-        environment:
-            MYSQL_DATABASE: first
-            MYSQL_PASSWORD: 123
-            MYSQL_ROOT_PASSWORD: 123
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        volumes:
-            - ./storage/dbdata:/var/lib/mysql
-        ports:
-            - 3306:3306
-        container_name: 'mysql'
-        networks:
-            - myNetwork
+  db:
+    container_name: 'mysql'
+    platform: linux/x86_64
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: first
+      MYSQL_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - myNetwork
+
+  phpmyadmin:
+    container_name: 'phpmyadmin'
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    networks:
+      - myNetwork
 networks:
-    myNetwork:
-        name: myNetwork
-        driver: bridge
+  myNetwork:
+    name: myNetwork
+    driver: bridge
