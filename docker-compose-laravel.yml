@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   webapp:
-    container_name: 'laravel-project'
+    container_name: 'laravel-project-main'
     image: php:8.1.2-apache
     restart: always
     command: 'php ./artisan serve --host=0.0.0.0'
@@ -12,37 +12,35 @@ services:
     depends_on:
       - db
     networks:
-      - myNetwork
-
+      - laravel-packages
   db:
-    container_name: 'mysql'
-    platform: linux/x86_64
+    container_name: 'laravel-project-db'
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: first
-      MYSQL_PASSWORD: 123
-      MYSQL_ROOT_PASSWORD: 123
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: 'pass'
+      MYSQL_DATABASE: 'laravel'
+      MYSQL_PASSWORD: 'pass'
     volumes:
       - ./storage/dbdata:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 3311:3306
     networks:
-      - myNetwork
+      - laravel-packages
 
   phpmyadmin:
-    container_name: 'phpmyadmin'
+    container_name: 'laravel-project-pma'
     image: phpmyadmin
     restart: always
     ports:
-      - 8080:80
+      - 9597:80
     environment:
-      - PMA_HOST=db
-      - PMA_PORT=3306
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 2G
     networks:
-      - myNetwork
+      - laravel-packages
 networks:
-  myNetwork:
-    name: myNetwork
+  laravel-packages:
+    name: laravel-packages
     driver: bridge
