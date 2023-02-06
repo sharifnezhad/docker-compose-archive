@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  webapp:
+    build: .
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - sharifweb
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - 'sharifweb-mysql:/var/lib/mysql'
+    ports:
+      - 3320:3306
+    networks:
+      - sharifweb
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 9597:80
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 2G
+    networks:
+      - sharifweb
+networks:
+  sharifweb:
+    external: true
+volumes:
+  sharifweb-mysql:
+    driver: local
