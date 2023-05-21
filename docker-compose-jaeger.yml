@@ -19,16 +19,6 @@ services:
       - 9411:9411
     networks:
       - jaeger
-  jaegertracing:
-    image: jaegertracing/example-hotrod:1.45
-    container_name: 'jaeger-tracing'
-    environment:
-      JAEGER_AGENT_HOST: "jaeger"
-    ports:
-      - 8080-8083:8080-8083
-    networks:
-      - jaeger
-
 networks:
   jaeger:
     external: true
